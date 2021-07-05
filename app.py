@@ -127,6 +127,7 @@ def hello_world():
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El taref', 'ElTaref')
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El oued', 'ElOued')
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El bayadh', 'ElBayadh')
+    file.loc[:, 'location'] = file.loc[:, 'location'].str.strip().str.get(0)
 
     # # Traiter le kilométrage
     file.loc[:, 'kilometrage'] = file.loc[:, 'kilometrage'].str.replace('  km', '')
