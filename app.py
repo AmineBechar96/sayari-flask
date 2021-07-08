@@ -56,7 +56,7 @@ def hello_world():
     file = file[~file.loc[:, 'id'].isna()]
     file.loc[:, 'id'] = file.id.astype('int')
     file.set_index('id', inplace=True)
-    file[~file.model.isna()]
+    file = file[~file.model.isna()]
 
     # # Définir la date et les voitures affichés dans les 10 derniers jours
 
@@ -127,7 +127,7 @@ def hello_world():
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El taref', 'ElTaref')
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El oued', 'ElOued')
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El bayadh', 'ElBayadh')
-    file.loc[:, 'location'] = file.loc[:, 'location'].str.strip().str.get(0)
+    file.loc[:, 'location'] = file.loc[:, 'location'].str.split().str.get(0)
 
     # # Traiter le kilométrage
     file.loc[:, 'kilometrage'] = file.loc[:, 'kilometrage'].str.replace('  km', '')
