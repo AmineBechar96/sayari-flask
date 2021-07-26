@@ -38,6 +38,7 @@ def hello_world():
     sell = pd.DataFrame(list(collection_sell.find({}, {'_id': False})))
     sell.set_index('id', inplace=True)
     entopot = pd.DataFrame(list(collection_entropot.find({}, {'_id': False})))
+    print (entopot)
     entopot.set_index('id', inplace=True)
 
 
