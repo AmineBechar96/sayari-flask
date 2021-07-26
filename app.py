@@ -107,7 +107,7 @@ def hello_world():
 
     file.loc[:, 'litre'] = file.loc[:, 'litre'].str.extract(r'(\d\W\d)').iloc[:, 0]
     file.loc[:, 'litre'] = file.litre.astype('float')
-    print('aw')
+
     # In[169]:
     file.iloc[:, 1] = file.iloc[:, 1].apply(brand)
     file = file[~(file.brand == 'delete')]
@@ -115,7 +115,7 @@ def hello_world():
     # In[169]:
     file.loc[:, 'tdi'] = file.loc[:, 'tdi'].str.lower().apply(tdi)
     file = file[~(file.tdi == 'delete')]
-
+    print('aw2')
     # # Traiter le prix
 
 
