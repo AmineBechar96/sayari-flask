@@ -53,6 +53,7 @@ def hello_world():
 
     # In[169]:
 
+
     file = file[~file.loc[:, 'id'].isna()]
     file.loc[:, 'id'] = file.id.astype('int')
     file.set_index('id', inplace=True)
@@ -70,7 +71,7 @@ def hello_world():
 
     sell2 = sell.reset_index().merge(file.reset_index().drop_duplicates(), on=['id'],
                                      how='left', indicator=True)
-    sell2 = sell2[sell2._merge == 'left_only'].iloc[:, 0:20]
+    sell2 = sell2[sell2._merge == 'left_only'].iloc[:, 0:21]
     sell2.set_index('id', inplace=True)
     sell2.columns = sell.columns
 
@@ -103,7 +104,16 @@ def hello_world():
     file.loc[:, 'litre'] = file.loc[:, 'litre'].str.extract(r'(\d\W\d)').iloc[:, 0]
     file.loc[:, 'litre'] = file.litre.astype('float')
 
+    # In[169]:
+    file.iloc[:, 1] = file.iloc[:, 1].apply(brand)
+    file = file[~(file.brand == 'delete')]
+
+    # In[169]:
+    file.loc[:, 'tdi'] = file.loc[:, 'tdi'].str.lower().apply(tdi)
+    file = file[~(file.tdi == 'delete')]
+
     # # Traiter le prix
+
 
     # In[175]:
 
@@ -127,7 +137,17 @@ def hello_world():
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El taref', 'ElTaref')
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El oued', 'ElOued')
     file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('El bayadh', 'ElBayadh')
-    file.loc[:, 'location'] = file.loc[:, 'location'].str.split().str.get(0)
+    file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('Bordj bou arreridj', 'BordjBouArreridj')
+    file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('Souk ahras', 'SoukAhras')
+    file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('Oum el bouaghi', 'OumElBouaghi')
+    file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('Sidi bel abbes', 'SidiBelAbbes')
+    file.loc[:, 'location'] = file.loc[:, 'location'].str.replace('Tizi ouzou', 'TiziOuzou')
+
+    file.loc[:, 'location_wilaya'] = file.loc[:, 'location'].str.split().str.get(0)
+    file.loc[:, 'location_ville'] = file.loc[:, 'location'].str.split(n=3).str[1:].str.join(sep=' ')
+
+    file = file.drop('location', axis=1)
+    file = file.reindex(columns=sell.columns)
 
     # # Traiter le kilométrage
     file.loc[:, 'kilometrage'] = file.loc[:, 'kilometrage'].str.replace('  km', '')
@@ -146,7 +166,7 @@ def hello_world():
 
     # In[180]:
 
-    sell = df_all[df_all.loc[:, '_merge'] == 'left_only'].iloc[:, 0:20]
+    sell = df_all[df_all.loc[:, '_merge'] == 'left_only'].iloc[:, 0:21]
     sell.set_index('id', inplace=True)
     sell.columns = entopot.columns
 
@@ -157,7 +177,7 @@ def hello_world():
 
     # In[182]:
 
-    new_cars = df_all2[df_all2.loc[:, '_merge'] == 'right_only'].iloc[:, np.r_[0, 20:39]]
+    new_cars = df_all2[df_all2.loc[:, '_merge'] == 'right_only'].iloc[:, np.r_[0, 21:41]]
     new_cars.set_index('id', inplace=True)
     new_cars.columns = entopot.columns
 
@@ -182,7 +202,17 @@ def hello_world():
 
     return 'Hello World!'
 
+def brand(m):
+    if m in (sell.brand.value_counts()[sell.brand.value_counts()>5]).index :
+        return m
+    else:
+        return 'delete'
 
+def tdi(m):
+    if m in (sell.tdi.str.lower().value_counts()[sell.tdi.str.lower().value_counts()>10]).index :
+        return m
+    else:
+        return 'delete'
 
 
 if __name__ == '__main__':
