@@ -19,6 +19,7 @@ def fun(f, i2):
             return f
 
 app = Flask(__name__)
+sell = 'aw'
 @app.route('/')
 def hello_world():
     ten_days = datetime.today() - timedelta(10)
@@ -33,6 +34,12 @@ def hello_world():
     collection = db['Ouedkniss-today']
     collection_sell = db['Sell']
     collection_entropot = db['Entropot']
+    global sell
+    sell = pd.DataFrame(list(collection_sell.find({}, {'_id': False})))
+    sell.set_index('id', inplace=True)
+    entopot = pd.DataFrame(list(collection_entropot.find({}, {'_id': False})))
+    entopot.set_index('id', inplace=True)
+
 
     # # Lire la base de donnés comme DataFrame
 
@@ -44,10 +51,7 @@ def hello_world():
 
     # In[168]:
 
-    sell = pd.DataFrame(list(collection_sell.find({}, {'_id': False})))
-    sell.set_index('id', inplace=True)
-    entopot = pd.DataFrame(list(collection_entropot.find({}, {'_id': False})))
-    entopot.set_index('id', inplace=True)
+
 
     # # Définir l'index
 
@@ -203,12 +207,14 @@ def hello_world():
     return 'Hello World!'
 
 def brand(m):
+    global sell
     if m in (sell.brand.value_counts()[sell.brand.value_counts()>5]).index :
         return m
     else:
         return 'delete'
 
 def tdi(m):
+    global sell
     if m in (sell.tdi.str.lower().value_counts()[sell.tdi.str.lower().value_counts()>10]).index :
         return m
     else:
